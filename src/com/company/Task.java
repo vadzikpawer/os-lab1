@@ -1,10 +1,15 @@
 package com.company;
 
 import java.io.Console;
+import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
 
 public abstract class Task {
+    public String[] menus;
+    public List<Function<Void, Boolean>> func;
     Scanner in = new Scanner(System.in);
+
     public abstract void Menu();
 
     public static void WaitForEnter() {

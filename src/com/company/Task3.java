@@ -1,41 +1,37 @@
 package com.company;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-public class Task2 extends Task {
-    private File file;
+public class Task3 extends Task{
+
+    File file;
     private final String curDirectory = "D://Maxim//ЯП//OS//lab1//";
 
-    public Task2(){
-        menus = new String[]{"Создать файл", "Записать в файл", "Вывести информацию из файла", "Удалить файл"};
-        func = Arrays.asList((num)->CreateFile(),(num)->WriteToFile(),(num)->ReadFromFile(),(num)->DeleteFile());
+    public Task3(){
+        menus = new String[]{"Записать в файл", "Вывести информацию из файла", "Удалить файл"};
+        func = Arrays.asList((num)->WriteToFile(),(num)->ReadFromFile(),(num)->DeleteFile());
     }
 
     @Override
-    public void Menu(){
+    public void Menu() {
         for (int i = 0; i < menus.length;i++){
             System.out.printf("%d) %s\n", i+1, menus[i]);
         }
     }
 
-    public Boolean CreateFile(){
-        System.out.print("Введите название файла: ");
-        String newfile = in.nextLine();
+    public void CreateFile(String newfile){
         file = new File(curDirectory + newfile);
         try
         {
             boolean created = file.createNewFile();
             if(created)
                 System.out.printf("Файл %s был успешно создан\n",newfile);
-            return true;
         }
         catch(IOException ex) {
             System.out.println(ex.getMessage());
-            return false;
         }
     }
 
@@ -43,33 +39,45 @@ public class Task2 extends Task {
         PrintAllFiles();
         System.out.print("Введите название файла для записи в него: ");
         String temp = in.nextLine();
-        System.out.print("Введите содержимое для записи в него: ");
-        String text = in.nextLine();
-        try(FileOutputStream fos=new FileOutputStream(curDirectory + temp))
+        if (!(file = new File(curDirectory + temp)).exists()){
+            if (!temp.contains(".json")){
+                temp += ".json";
+            }
+            CreateFile(temp);
+        }
+        Gson gson = new Gson();
+        String json = gson.toJson(CreatePerson());
+        try(FileOutputStream fos = new FileOutputStream(curDirectory + temp))
         {
-            byte[] buffer = text.getBytes();
+            byte[] buffer = json.getBytes();
 
             fos.write(buffer, 0, buffer.length);
             System.out.println("Информация в файл была записана");
         }
         catch(IOException ex){
-
             System.out.println(ex.getMessage());
         }
         return true;
     }
 
     public Boolean ReadFromFile(){
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
         PrintAllFiles();
         System.out.print("Введите название файла для вывода: ");
         String temp = in.nextLine();
+        if (!temp.contains(".json")){
+            temp += ".json";
+        }
         try(FileInputStream fin=new FileInputStream(curDirectory + temp))
         {
+            StringBuilder content = new StringBuilder();
             int i=-1;
             while((i=fin.read())!=-1){
-                System.out.print((char)i);
+                content.append((char)i);
             }
-            System.out.print("\n");
+            Person person = gson.fromJson(content.toString(), Person.class);
+            System.out.printf("%s\n",person.ToString());
         }
         catch(IOException ex){
             System.out.println(ex.getMessage());
@@ -81,6 +89,9 @@ public class Task2 extends Task {
         PrintAllFiles();
         System.out.print("Введите название файла для удаления: ");
         String temp = in.nextLine();
+        if (!temp.contains(".json")){
+            temp += ".json";
+        }
         file = new File(curDirectory+temp);
         if(file.delete()){
             System.out.printf("%s файл удален\n",curDirectory+temp);
@@ -96,11 +107,23 @@ public class Task2 extends Task {
         {
             for(File item : dir.listFiles()){
 
-                if(!item.isDirectory()){
+                if(!item.isDirectory() && item.getName().contains(".json")){
                     System.out.println(item.getName());
                 }
 
             }
         }
     }
+
+    private Person CreatePerson(){
+        System.out.print("Введите имя: ");
+        String name = in.nextLine();
+        System.out.print("Введите фамилию: ");
+        String surname = in.nextLine();
+        System.out.print("Введите возраст: ");
+        int age = in.nextInt();
+
+        return new Person(name, surname, age);
+    }
+
 }

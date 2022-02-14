@@ -1,7 +1,6 @@
 package com.company;
 
 import java.io.Console;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -11,16 +10,29 @@ public class Main {
     public static void main(String[] args) {
         Task1 task1 = new Task1();
         Task2 task2 = new Task2();
+        Task3 task3 = new Task3();
+        Task4 task4 = new Task4();
 
-        Task[] tasks = {task1, task2};
+        Task[] tasks = {task1, task2, task3, task4};
         Scanner in = new Scanner(System.in);
         while (true){
             Menu();
-            int num = in.nextInt();
-            if (num - 1 < menus.length - 1 && num - 1 >= 0){
-                tasks[num-1].Menu();
+            int numt = in.nextInt();
+            int num;
+            if (numt - 1 < menus.length - 1 && numt - 1 >= 0){
+                tasks[numt-1].Menu();
+                num = in.nextInt();
+                if (num > 0 && num <= tasks[numt-1].menus.length){
+                    tasks[numt-1].func.get(num-1).apply(null);
+                    WaitForEnter();
+                }
+                else {
+                    System.out.printf("Вводите только цифры от 1 до %d\n", tasks[numt-1].menus.length);
+                    WaitForEnter();
+                    tasks[numt-1].Menu();
+                }
             }
-            else if (num == menus.length){
+            else if (numt == menus.length){
                 break;
             }
             else {
