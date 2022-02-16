@@ -36,7 +36,7 @@ public class Task3 extends Task{
     }
 
     public Boolean WriteToFile(){
-        PrintAllFiles();
+        PrintAllFiles(curDirectory, ".json");
         System.out.print("Введите название файла для записи в него: ");
         String temp = in.nextLine();
         if (!(file = new File(curDirectory + temp)).exists()){
@@ -63,7 +63,7 @@ public class Task3 extends Task{
     public Boolean ReadFromFile(){
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        PrintAllFiles();
+        PrintAllFiles(curDirectory, ".json");
         System.out.print("Введите название файла для вывода: ");
         String temp = in.nextLine();
         if (!temp.contains(".json")){
@@ -72,7 +72,7 @@ public class Task3 extends Task{
         try(FileInputStream fin=new FileInputStream(curDirectory + temp))
         {
             StringBuilder content = new StringBuilder();
-            int i=-1;
+            int i;
             while((i=fin.read())!=-1){
                 content.append((char)i);
             }
@@ -86,7 +86,7 @@ public class Task3 extends Task{
     }
 
     public Boolean DeleteFile(){
-        PrintAllFiles();
+        PrintAllFiles(curDirectory, ".json");
         System.out.print("Введите название файла для удаления: ");
         String temp = in.nextLine();
         if (!temp.contains(".json")){
@@ -100,20 +100,6 @@ public class Task3 extends Task{
         return true;
     }
 
-    private void PrintAllFiles(){
-        File dir = new File("D://Maxim//ЯП//OS//lab1");
-
-        if(dir.isDirectory())
-        {
-            for(File item : dir.listFiles()){
-
-                if(!item.isDirectory() && item.getName().contains(".json")){
-                    System.out.println(item.getName());
-                }
-
-            }
-        }
-    }
 
     private Person CreatePerson(){
         System.out.print("Введите имя: ");

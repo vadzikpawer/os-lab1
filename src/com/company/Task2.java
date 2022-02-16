@@ -40,7 +40,7 @@ public class Task2 extends Task {
     }
 
     public Boolean WriteToFile(){
-        PrintAllFiles();
+        PrintAllFiles(curDirectory);
         System.out.print("Введите название файла для записи в него: ");
         String temp = in.nextLine();
         System.out.print("Введите содержимое для записи в него: ");
@@ -60,12 +60,12 @@ public class Task2 extends Task {
     }
 
     public Boolean ReadFromFile(){
-        PrintAllFiles();
+        PrintAllFiles(curDirectory);
         System.out.print("Введите название файла для вывода: ");
         String temp = in.nextLine();
         try(FileInputStream fin=new FileInputStream(curDirectory + temp))
         {
-            int i=-1;
+            int i;
             while((i=fin.read())!=-1){
                 System.out.print((char)i);
             }
@@ -78,7 +78,7 @@ public class Task2 extends Task {
     }
 
     public Boolean DeleteFile(){
-        PrintAllFiles();
+        PrintAllFiles(curDirectory);
         System.out.print("Введите название файла для удаления: ");
         String temp = in.nextLine();
         file = new File(curDirectory+temp);
@@ -89,18 +89,5 @@ public class Task2 extends Task {
         return true;
     }
 
-    private void PrintAllFiles(){
-        File dir = new File("D://Maxim//ЯП//OS//lab1");
 
-        if(dir.isDirectory())
-        {
-            for(File item : dir.listFiles()){
-
-                if(!item.isDirectory()){
-                    System.out.println(item.getName());
-                }
-
-            }
-        }
-    }
 }

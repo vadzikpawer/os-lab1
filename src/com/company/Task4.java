@@ -59,7 +59,7 @@ public class Task4 extends Task{
     }
 
     public Boolean WriteToFile() throws ParserConfigurationException, IOException {
-        PrintAllFiles();
+        PrintAllFiles(curDirectory, ".xml");
         System.out.print("Введите название файла для записи в него: ");
         String temp = in.nextLine();
         CreateFile(temp+".xml");
@@ -87,18 +87,8 @@ public class Task4 extends Task{
         return true;
     }
 
-    private String getValue(NodeList fields, int index)
-    {
-        NodeList list = fields.item(index).getChildNodes();
-        if (list.getLength() > 0) {
-            return list.item(0).getNodeValue();
-        } else {
-            return "";
-        }
-    }
-
     public Boolean ReadFromFile(){
-        PrintAllFiles();
+        PrintAllFiles(curDirectory, ".xml");
         System.out.print("Введите название файла для вывода: ");
         String temp = in.nextLine();
         if (!temp.contains(".xml")){
@@ -117,6 +107,7 @@ public class Task4 extends Task{
                 e.printStackTrace();
             }
 
+            assert doc != null;
             doc.getDocumentElement().normalize();
 
             NodeList nodeList = doc.getElementsByTagName("person");
@@ -138,7 +129,7 @@ public class Task4 extends Task{
     }
 
     public Boolean DeleteFile(){
-        PrintAllFiles();
+        PrintAllFiles(curDirectory, ".xml");
         System.out.print("Введите название файла для удаления: ");
         String temp = in.nextLine();
         if (!temp.contains(".xml")){
@@ -152,24 +143,9 @@ public class Task4 extends Task{
         return true;
     }
 
-    private void PrintAllFiles(){
-        File dir = new File("D://Maxim//ЯП//OS//lab1");
-
-        if(dir.isDirectory())
-        {
-            for(File item : Objects.requireNonNull(dir.listFiles())){
-
-                if(!item.isDirectory() && item.getName().contains(".xml")){
-                    System.out.println(item.getName());
-                }
-
-            }
-        }
-    }
-
     void writeDocument(Document document, String path) throws TransformerFactoryConfigurationError, IOException {
-        Transformer trf = null;
-        DOMSource src = null;
+        Transformer trf;
+        DOMSource src;
         FileOutputStream fos = null;
         try {
             trf = TransformerFactory.newInstance()

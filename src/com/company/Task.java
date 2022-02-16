@@ -1,7 +1,9 @@
 package com.company;
 
 import java.io.Console;
+import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -12,17 +14,21 @@ public abstract class Task {
 
     public abstract void Menu();
 
-    public static void WaitForEnter() {
-        Console c = System.console();
-        if (c != null) {
-            // printf-like arguments
-            c.format("\nPress ENTER to proceed.\n");
-            c.readLine();
-        }
-        else {
-            System.out.println("\nНажмите Ввод, чтобы продолжить\n");
-            try{System.in.read();}
-            catch(Exception e){}
+    public void PrintAllFiles(String directory, String... filter){
+        File dir = new File(directory);
+
+        if(dir.isDirectory())
+        {
+            for(File item : Objects.requireNonNull(dir.listFiles())){
+
+                if(!item.isDirectory() && filter.length==0){
+                    System.out.println(item.getName());
+                }
+                else if (!item.isDirectory() && filter.length!= 0 && item.getName().contains(filter[0])){
+                    System.out.println(item.getName());
+                }
+
+            }
         }
     }
 }

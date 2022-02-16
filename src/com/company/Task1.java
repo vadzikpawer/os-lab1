@@ -51,7 +51,6 @@ public class Task1 extends Task{
         }
         else {
             System.out.print("Диск не найден\n");
-            WaitForEnter();
             this.Menu();
             return false;
         }
